@@ -382,7 +382,7 @@ function createDummyCourses() {
 																							"QuestionID": question_id,
 																							"StepID": step_id,
 																							"kind": "courseanswer",
-																							"pqattempts": "1"
+																							"pqattempts": 1
 																						});
 																					break;
 															case "Comment/Essay Box" : defaultCourseAnswer.push({
@@ -392,7 +392,7 @@ function createDummyCourses() {
 																							"QuestionID": question_id,
 																							"StepID": step_id,
 																							"kind": "courseanswer",
-																							"pqattempts": "1"
+																							"pqattempts": 1
 																					});
 																					break;
 															case "Attachment" : defaultCourseAnswer.push({
@@ -402,7 +402,7 @@ function createDummyCourses() {
 																							"QuestionID": question_id,
 																							"StepID": step_id,
 																							"kind": "courseanswer",
-																							"pqattempts": "1"	
+																							"pqattempts": 1
 																					});															
 																					break;					
 															case "Single Textbox" : defaultCourseAnswer.push({
@@ -412,7 +412,7 @@ function createDummyCourses() {
 																							"QuestionID": question_id,
 																							"StepID": step_id,
 																							"kind": "courseanswer",
-																							"pqattempts": "1"	
+																							"pqattempts": 1
 																					});															
 																					break;			
 													}
