@@ -35,7 +35,7 @@ function start() {
 function increaseLimits() {
     exec('sudo launchctl limit maxfiles 150056 150056', function doneWithLaunchCtl() {
         exec('sudo ulimit -n 150056', function doneWithUlimit() {
-            return createDummyCourses()
+            return getListOfDatabases()
         })
     })
 }
@@ -138,11 +138,63 @@ function create_db(){
 	});
 }
 
+
+function getListOfDatabases() {
+    fs.readdir('./databases', function doneReadDir(err, files) {
+        files.forEach(function addFile(element, index, array) {
+			var db = element.substr(0, element.length - 3);
+			if(db == "members" || db == "course" || db == "coursestep" || db == "coursequestion" || db == "courseanswer" || db == "membercourseprogress")
+				databases.push(element.substr(0, element.length - 3))
+        })
+        installDatabases()
+    })
+}
+
+var a = 0
+
+function installDatabases() {
+    var database = databases[a]
+    if (a !== databases.length) {
+        console.log("creating database " + database)
+        nano.db.create(database, function(err, body) {
+            if (err && err.error !== "file_exists") console.log(err)
+            a++
+            return installDatabases()
+        })
+    } else {
+        return installDesignDocs()
+    }
+}
+
+var b = 0
+
+function installDesignDocs() {
+    var database = databases[b]
+    if (b !== databases.length) {
+        if (database != "communities" && database != "languages" && database != "configurations") {
+            console.log("Inserting design docs for the " + database + " database")
+            exec('node_modules/.bin/couchapp push ./databases/' + database + '.js ' + couchUrl + '/' + database, function(error, stdout, stderr) {
+                if (error) console.log(error);
+                if (stderr) console.log(stderr);
+                console.log(stdout)
+                b++
+                installDesignDocs()
+            })
+        } else {
+            b++
+            installDesignDocs()
+        }
+    }else{
+		createDummyCourses();
+	}
+}
+
 function createDummyCourses() {
 
-	create_db().then(function(result){
-		console.log(result);
-		if(result == "Success"){
+	//create_db().then(function(result){
+		//console.log(result);
+		//return false;
+		//if(result == "Success"){
 			//Step 1
 			var members = nano.db.use('members');
 			nano.db.get('members', function(err, body) {
@@ -564,8 +616,8 @@ function createDummyCourses() {
 					}
 				});
 			});
-		}
-	});
+	//	}
+	//});
 }
 
 function done(){
