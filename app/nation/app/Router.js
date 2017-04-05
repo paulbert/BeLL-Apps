@@ -3621,7 +3621,7 @@ $(function() {
 
             //	.append($button)
             // modelForm.render()
-            // Bind form events for when Group is ready
+            // Bind form events for when Course is ready
 
             model.once('Model:ready', function() {
 
@@ -3718,6 +3718,10 @@ $(function() {
             {
                 $('#nav').hide();
                 lang = "English";
+                if($.cookie('languageFromCookie'))
+                {
+                    lang = $.cookie('languageFromCookie')
+                }
             }
             var viplinkModel = null;
             if(secretId)
@@ -3791,20 +3795,39 @@ $(function() {
                             });
                             nationConfig = nationConfig.first();
                             listCommunity = "<img src='img/logo.png' width='108px' height='108px' style='z-index:1; border:2px solid white;border-radius:60px;'/>";
-                            listCommunity = listCommunity + "<h3> " + "Hi " + viplinkModel.attributes.name + "</h3>" + "<h3>" + "Welcome to " + nationConfig.get("name") + " Communities" + "</h3>";
+                        if (!$.cookie('Member.login')) {
+                            var options = [];
+                            var allLanguages = {};
+                            var languages = new App.Collections.Languages();
+                            languages.fetch({
+                                async: false
+                            });
+                            for (var i=0;i<languages.length;i++) {
+                                if (languages.models[i].attributes.hasOwnProperty("nameOfLanguage")) {
+                                    var languageName = languages.models[i].attributes.nameOfLanguage;
+                                    allLanguages[languageName] = languages.models[i].get('nameInNativeLang');
+                                    options += '<option value="' + languageName + '">' + allLanguages[languageName] + '</option>';
+                                }
+                            }
+                            listCommunity = "<img src='img/logo.png' width='108px' height='108px' style='z-index:1; border:2px solid white;border-radius:60px;'/>" + '<div id = "loginLang" st><select id="onLoginLanguage">'+options+'</select>'+"&nbsp;&nbsp;"+"<a class='btn btn-success' href='../MyApp/index.html#login'>" + App.languageDictValue.attributes.Sign_In + "</a>"+'</div>';
                         }
-                        else {//if logged in and token is not correct
+                            listCommunity = listCommunity + "<h3> " + App.languageDictValue.attributes.Hi + "&nbsp;" + viplinkModel.attributes.name + "</h3>" + "<h3>" + App.languageDictValue.attributes.welcome_to + "&nbsp;" + nationConfig.get("name") + "&nbsp" + App.languageDictValue.attributes.Communities + "</h3>";
+                        } else {//if logged in and token is not correct
                             listCommunity = "<h3> " + App.languageDictValue.get("Communities") + "  |  <a  class='btn btn-success' id='addComm' href='#addCommunity'>" + App.languageDictValue.get("Add_Community") + "</a>  </h3><p>" + App.languageDictValue.get("Member_Resources_Count") + "</p>";
                         }
 
                         if (firstDt.getFullYear() != today.getFullYear() || firstDt.getMonth() != today.getMonth()) {
-                            listCommunity += '<input class="date-picker"/><style>.ui-datepicker-calendar{display: none;}.date-picker{width:300px;float:right;}</style>';
+                            listCommunity += '<input class="date-picker"/><style>.ui-datepicker-calendar{display: none;}.date-picker{width:300px;}</style>';
                         }
-
                         listCommunity += "<div id='list-of-Communities'></div>"
-
                         App.$el.children('.body').html('<div id="communityDiv"></div>');
                         $('#communityDiv').append(listCommunity);
+                        $('#onLoginLanguage').change(function()
+                        {
+                            $.cookie('languageFromCookie',$(this).val());
+                            location.reload();
+                        });
+                        $("select option[value='"+lang+"']").attr("selected","selected");
 
                         if(firstDt.getFullYear() != today.getFullYear() || firstDt.getMonth() != today.getMonth()) {
                             $('input.date-picker').datepicker({
@@ -3826,23 +3849,17 @@ $(function() {
                             });
                             $('input.date-picker').datepicker('setDate', setDt);
                         }
-
                         $('#list-of-Communities', App.$el).append(CommunityTable.el);
                         App.Router.applyCorrectStylingSheet(App.languageDictValue.get('directionOfLang'));
                         App.stopActivityIndicator();
-
                     }
                 });
-
-
-               
             }
             App.stopActivityIndicator()
             if(!isCorrectSecretId)
             {
                 window.location.href = "../MyApp/index.html#login";
             }
-
         },
 
         getPendingRequests: function() {
