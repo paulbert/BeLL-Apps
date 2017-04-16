@@ -62,13 +62,13 @@ before_install:
   - |-
     sed -i 's#"visits": 0#"visits":0,"bellLanguage":"English","BirthDate":"2010-10-15T04:00:00.000Z","community":"NATION"#' install_linux
 
-  - cd app/MyApp
+  - cd app
   - python minify_html.py
+  - cd MyApp
   - mv index.html index1.html
   - mv index2.html index.html
   - cd ../..
   - cd app/nation
-  - python minify_html.py
   - mv index.html index1.html
   - mv index2.html index.html
   - cd ../..
