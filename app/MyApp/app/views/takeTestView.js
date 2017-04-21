@@ -31,9 +31,15 @@ $(function() {
             },
             "click #nextPressed": function(e) {
                 this.nextquestion();
+            },
+             "click #answerresetPressed": function(e) {
+                this.answerreview();
             }
         },
 
+        answerreview:function (){
+            
+        }
         nextquestion: function (e) {
             if ($("input[type='text'][name='singleLineAnswer']").val() != undefined ) {
                 this.Givenanswers.push(decodeURI($("input[type='text'][name='singleLineAnswer']").val()));
@@ -181,12 +187,13 @@ $(function() {
                 this.vars.singleLineQuestionTitle = singleline
                 this.$el.append(this.template(this.vars));
                 this.$el.append('<div class="Progress"><p>' + (this.index + 1) + '/' + this.TotalCount + '</p> </div>')
-                this.$el.append('<div class="quizActions" ><div class="btn btn-danger" id="exitPressed">'+App.languageDict.attributes.Exit+'</div></</div>')
+                this.$el.append('<div class="quizActions" ><div class="btn btn-danger" id="exitPressed">'+App.languageDict.attributes.Exit+'</div></</div>');
                 if((this.index + 1) == this.TotalCount){
                     this.$el.find('.quizActions').append('<div class="btn btn-info" id="finishPressed">'+App.languageDict.attributes.Finish+'</div>');
                 } else {
                     this.$el.find('.quizActions').append('<div class="btn btn-primary" id="nextPressed">'+App.languageDict.attributes.Next+'</div>');
                 }
+                this.$el.append('<div class="quizActions" ><div class="btn btn-inverse" id="answerresetPressed">'+App.languageDict.attributes.Answer_Reset+'</div></</div>');
             } else {
                 var sstatus = this.myModel.get('stepsStatus')
                 var sp = this.myModel.get('stepsResult')
