@@ -32,14 +32,26 @@ $(function() {
             "click #nextPressed": function(e) {
                 this.nextquestion();
             },
-             "click #answerresetPressed": function(e) {
-                this.answerreview();
-            }
-        },
+            "click #answerresetPressed": function(e) {
+                 if ($("input[type='text'][name='singleLineAnswer']").val() != undefined ) {
+                    this.reset();
+                } else if ($("input[type='text'][name='commentEssay']").val() != undefined ) {
+                    this.reset();
+                } else if($("input[type='hidden'][name='_attachment']").val() != undefined ) {
+                    this.reset();
+                } else if ($("input:checkbox[name='multiplechoice[]']").val() != undefined) {
+                    $("input:checkbox[name='multiplechoice[]']:checked").each(function(index) {
+                        if($(this).is(':checked')==true){
+                            this.reset();
+                        }
+                    });
+                }else if ($("input:radio[name='multiplechoice[]']").val() != undefined) {
+                    if($("input:radio[name='multiplechoice[]']:checked").length > 0){
+                        this.reset();
+                    }
+                }
+            },
 
-        answerreview:function (){
-            
-        }
         nextquestion: function (e) {
             if ($("input[type='text'][name='singleLineAnswer']").val() != undefined ) {
                 this.Givenanswers.push(decodeURI($("input[type='text'][name='singleLineAnswer']").val()));
