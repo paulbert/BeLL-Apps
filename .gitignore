@@ -16,3 +16,5 @@ app/nation/app/collections.js
 app/nation/app/models.js
 app/nation/app/vendor.js
 app/nation/app/views.js
+
+node_modules/
